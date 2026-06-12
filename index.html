@@ -13,7 +13,7 @@
     --accent: #ffffff;
     --text-dim: #b0b0b0;
     --bg-dark: #0f0f0f;
-    --bg-panel: rgba(20, 20, 20, 0.9); /* Slightly more transparent to see bg */
+    --bg-panel: rgba(20, 20, 20, 0.95);
     --gold: #FFD700;
     --border-color: #333;
     --success: #28a745;
@@ -31,8 +31,7 @@ ul { list-style: none; }
 /* --- BACKGROUND --- */
 #bg-canvas {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-    /* BACKGROUND IMAGE ADDED HERE */
-    background: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
 }
 
 /* --- NAVIGATION --- */
@@ -58,22 +57,19 @@ nav {
 /* --- HERO SECTION --- */
 .hero {
     height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-    padding: 0 20px; border-bottom: 1px solid #222;
-    /* CHANGED: Made background transparent so the image shows through */
-    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)); 
+    padding: 0 20px; background: linear-gradient(to bottom, rgba(0,0,0,0.6), var(--bg-dark)); border-bottom: 1px solid #222;
 }
-.hero h1 { font-size: 3.5rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); text-shadow: 2px 2px 4px rgba(0,0,0,0.8); animation: fadeInDown 1s ease; }
-.hero .motto { font-size: 1.5rem; color: var(--secondary); font-style: italic; margin-bottom: 1.5rem; font-weight: 600; text-shadow: 1px 1px 2px black; animation: fadeInUp 1s ease 0.2s backwards; }
-.hero .meta { font-size: 1rem; color: #ddd; max-width: 600px; margin-bottom: 2rem; text-shadow: 1px 1px 2px black; animation: fadeInUp 1s ease 0.4s backwards; }
+.hero h1 { font-size: 3.5rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); text-shadow: 0 0 10px rgba(183, 28, 28, 0.5); animation: fadeInDown 1s ease; }
+.hero .motto { font-size: 1.5rem; color: var(--secondary); font-style: italic; margin-bottom: 1.5rem; font-weight: 600; animation: fadeInUp 1s ease 0.2s backwards; }
+.hero .meta { font-size: 1rem; color: var(--text-dim); max-width: 600px; margin-bottom: 2rem; animation: fadeInUp 1s ease 0.4s backwards; }
 .cta-btn {
     background: var(--secondary); color: white; padding: 12px 35px; border: none; border-radius: 2px; font-weight: bold;
     cursor: pointer; font-size: 1rem; text-transform: uppercase; transition: all 0.3s; letter-spacing: 1px; display: inline-block; animation: fadeInUp 1s ease 0.6s backwards;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 .cta-btn:hover { background: var(--secondary-hover); transform: translateY(-3px); box-shadow: 0 0 15px rgba(183, 28, 28, 0.4); }
 
 /* --- SECTIONS COMMON --- */
-section { padding: 80px 5%; border-bottom: 1px solid #222; background-color: rgba(15, 15, 15, 0.85); /* Semi-transparent to see bg */}
+section { padding: 80px 5%; border-bottom: 1px solid #222; }
 .section-title {
     text-align: center; font-size: 2.2rem; color: var(--secondary); margin-bottom: 3rem; text-transform: uppercase;
     letter-spacing: 2px; position: relative; display: inline-block; left: 50%; transform: translateX(-50%);
@@ -85,7 +81,6 @@ section { padding: 80px 5%; border-bottom: 1px solid #222; background-color: rgb
 .card {
     background: var(--bg-panel); padding: 2rem; border-top: 4px solid var(--secondary);
     transition: transform 0.3s, box-shadow 0.3s; border-radius: 4px;
-    backdrop-filter: blur(5px); /* Helps readability over image */
 }
 .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 .card h3 { color: white; margin-bottom: 1rem; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
@@ -137,7 +132,7 @@ tr:hover { background-color: rgba(255,255,255,0.03); }
 .mascot-icon { font-size: 4rem; margin-bottom: 10px; display: block; }
 
 /* --- PORTAL & ADMIN CONTAINERS --- */
-.portal-container { max-width: 900px; margin: 0 auto; background: var(--bg-panel); padding: 2.5rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+.portal-container { max-width: 900px; margin: 0 auto; background: var(--bg-panel); padding: 2.5rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
 .dashboard-view { display: none; animation: fadeIn 0.5s; }
 .dashboard-view.active { display: block; }
@@ -179,7 +174,7 @@ tr:hover { background-color: rgba(255,255,255,0.03); }
 .toast.show { transform: translateY(0); opacity: 1; }
 
 /* --- FOOTER --- */
-footer { text-align: center; padding: 2rem; border-top: 1px solid #333; font-size: 0.9rem; color: #666; background: #000; }
+footer { text-align: center; padding: 2rem; border-top: 1px solid #333; font-size: 0.9rem; color: #666; }
 
 /* --- UTILITY CLASSES --- */
 .d-none { display: none !important; }
@@ -1378,4 +1373,4 @@ document.addEventListener('DOMContentLoaded', init);
 
 </script>
 </body>
-</html>    
+</html>
