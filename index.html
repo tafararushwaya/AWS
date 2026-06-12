@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AWS | Allan Wilson High School System</title>
+<style>
+/* --- CSS VARIABLES & THEME --- */
+:root {
+    --primary: #000000;
+    --secondary: #B71C1C;
+    --secondary-hover: #d32f2f;
+    --accent: #ffffff;
+    --text-dim: #b0b0b0;
+    --bg-dark: #0f0f0f;
+    --bg-panel: rgba(20, 20, 20, 0.95);
+    --gold: #FFD700;
+    --border-color: #333;
+    --success: #28a745;
+    --danger: #dc3545;
+    --info: #17a2b8;
+}
+
+/* --- GLOBAL RESET --- */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+html { scroll-behavior: smooth; }
+body { background-color: var(--bg-dark); color: var(--text-dim); overflow-x: hidden; line-height: 1.6; }
+a { text-decoration: none; transition: 0.3s; }
+ul { list-style: none; }
+
+/* --- BACKGROUND --- */
+#bg-canvas {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+}
+
+/* --- NAVIGATION --- */
+nav {
+    background: rgba(0, 0, 0, 0.95); padding: 1rem 5%;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 3px solid var(--secondary);
+    position: sticky; top: 0; z-index: 1000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.logo { font-size: 1.4rem; font-weight: 800; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; }
+.logo span { color: var(--secondary); }
+
+.nav-links { display: flex; gap: 20px; }
+.nav-links a {
+    color: var(--text-dim); font-weight: 500; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;
+    cursor: pointer;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--secondary); }
+.menu-toggle { display: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+/* --- HERO SECTION --- */
+.hero {
+    height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+    padding: 0 20px; background: linear-gradient(to bottom, rgba(0,0,0,0.6), var(--bg-dark)); border-bottom: 1px solid #222;
+}
+.hero h1 { font-size: 3.5rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); text-shadow: 0 0 10px rgba(183, 28, 28, 0.5); animation: fadeInDown 1s ease; }
+.hero .motto { font-size: 1.5rem; color: var(--secondary); font-style: italic; margin-bottom: 1.5rem; font-weight: 600; animation: fadeInUp 1s ease 0.2s backwards; }
+.hero .meta { font-size: 1rem; color: var(--text-dim); max-width: 600px; margin-bottom: 2rem; animation: fadeInUp 1s ease 0.4s backwards; }
+.cta-btn {
+    background: var(--secondary); color: white; padding: 12px 35px; border: none; border-radius: 2px; font-weight: bold;
+    cursor: pointer; font-size: 1rem; text-transform: uppercase; transition: all 0.3s; letter-spacing: 1px; display: inline-block; animation: fadeInUp 1s ease 0.6s backwards;
+}
+.cta-btn:hover { background: var(--secondary-hover); transform: translateY(-3px); box-shadow: 0 0 15px rgba(183, 28, 28, 0.4); }
+
+/* --- SECTIONS COMMON --- */
+section { padding: 80px 5%; border-bottom: 1px solid #222; }
+.section-title {
+    text-align: center; font-size: 2.2rem; color: var(--secondary); margin-bottom: 3rem; text-transform: uppercase;
+    letter-spacing: 2px; position: relative; display: inline-block; left: 50%; transform: translateX(-50%);
+}
+.section-title::after { content: ''; display: block; width: 60px; height: 3px; background: var(--accent); margin: 10px auto 0; }
+
+/* --- GRID & CARDS --- */
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+.card {
+    background: var(--bg-panel); padding: 2rem; border-top: 4px solid var(--secondary);
+    transition: transform 0.3s, box-shadow 0.3s; border-radius: 4px;
+}
+.card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+.card h3 { color: white; margin-bottom: 1rem; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+.card p { color: var(--text-dim); font-size: 0.95rem; text-align: justify; }
+.coordinates { font-family: monospace; color: var(--gold); font-size: 0.9rem; margin-top: 10px; display: block; }
+
+/* --- FORMS & INPUTS --- */
+input, select, textarea {
+    width: 100%; padding: 12px 15px; margin: 8px 0; background: rgba(0,0,0,0.6); 
+    border: 1px solid #444; color: white; border-radius: 4px; font-size: 1rem; transition: 0.3s;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 8px rgba(183, 28, 28, 0.3); }
+label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 5px; text-transform: uppercase; font-weight: bold;}
+
+/* --- TABLE STYLES --- */
+.table-container { overflow-x: auto; margin-top: 20px; }
+table { width: 100%; border-collapse: collapse; min-width: 600px; }
+th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #333; }
+th { background-color: rgba(183, 28, 28, 0.2); color: var(--secondary); text-transform: uppercase; font-size: 0.8rem; }
+tr:hover { background-color: rgba(255,255,255,0.03); }
+.tag { padding: 4px 8px; border-radius: 3px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; display: inline-block; margin-right: 5px;}
+.tag-day { background: #1976D2; color: white; }
+.tag-boarding { background: #388E3C; color: white; }
+
+/* --- GRADE TABLE SPECIFIC --- */
+.grade-table th, .grade-table td { text-align: center; border: 1px solid #444; padding: 8px; }
+.grade-table input { padding: 5px; margin: 0; text-align: center; font-size: 0.9rem; }
+.grade-pass { color: var(--success); font-weight: bold; }
+.grade-fail { color: var(--danger); font-weight: bold; }
+.grade-distinction { color: var(--gold); font-weight: bold; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+
+/* --- HOUSES --- */
+.houses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.house-card { background: #1a1a1a; border-radius: 8px; overflow: hidden; border: 1px solid #333; transition: transform 0.3s; }
+.house-card:hover { transform: translateY(-5px); border-color: var(--secondary); }
+.house-header { padding: 15px; color: #fff; font-weight: bold; text-transform: uppercase; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; }
+.house-body { padding: 15px; color: var(--text-dim); font-size: 0.9rem; }
+.house-red .house-header { background: #D32F2F; }
+.house-yellow .house-header { background: #FBC02D; color: #000; }
+.house-green .house-header { background: #388E3C; }
+.house-blue .house-header { background: #1976D2; }
+.house-white .house-header { background: #FFFFFF; color: #000; }
+.house-lilac .house-header { background: #9C27B0; }
+
+/* --- SPIRIT --- */
+.war-cry-container { text-align: center; background: linear-gradient(45deg, #000, #1a0505); padding: 3rem; border: 2px solid var(--secondary); border-radius: 10px; margin: 2rem 0; box-shadow: 0 0 30px rgba(183, 28, 28, 0.1); }
+.war-cry-text { font-size: 1.8rem; font-weight: 700; color: var(--accent); text-transform: uppercase; line-height: 1.4; letter-spacing: 2px; font-style: italic; }
+.mascot-display { text-align: center; margin-top: 2rem; }
+.mascot-icon { font-size: 4rem; margin-bottom: 10px; display: block; }
+
+/* --- PORTAL & ADMIN CONTAINERS --- */
+.portal-container { max-width: 900px; margin: 0 auto; background: var(--bg-panel); padding: 2.5rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+.dashboard-view { display: none; animation: fadeIn 0.5s; }
+.dashboard-view.active { display: block; }
+
+/* --- ADMIN DASHBOARD TABS --- */
+.admin-tabs { display: flex; border-bottom: 2px solid #333; margin-bottom: 20px; flex-wrap: wrap; }
+.admin-tab-btn {
+    flex: 1; padding: 15px; background: transparent; border: none; color: #888; cursor: pointer;
+    font-weight: bold; text-transform: uppercase; font-size: 0.9rem; border-bottom: 3px solid transparent; min-width: 100px;
+}
+.admin-tab-btn:hover { color: white; }
+.admin-tab-btn.active { color: var(--secondary); border-bottom-color: var(--secondary); background: rgba(183,28,28,0.05); }
+
+/* --- NEWS FEED --- */
+.news-card { background: #151515; border: 1px solid #333; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+.news-header { padding: 15px; background: rgba(255,255,255,0.05); border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center;}
+.news-header h4 { color: white; margin: 0; font-size: 1.1rem; }
+.news-date { font-size: 0.8rem; color: #666; }
+.news-image { width: 100%; height: 200px; object-fit: cover; background: #222; display: flex; align-items: center; justify-content: center; color: #444;}
+.news-body { padding: 15px; color: #ccc; font-size: 0.95rem; }
+.news-comments { padding: 15px; background: #111; border-top: 1px solid #333; }
+.comment-item { padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.85rem; }
+.comment-user { color: var(--secondary); font-weight: bold; font-size: 0.8rem; }
+.comment-text { color: #bbb; margin-left: 5px; }
+
+.add-comment-box { display: flex; gap: 10px; margin-top: 10px; }
+.add-comment-box input { margin: 0; font-size: 0.85rem; padding: 8px; }
+
+.btn-small { padding: 5px 10px; font-size: 0.75rem; cursor: pointer; border: none; border-radius: 3px; color: white; font-weight: bold; text-transform: uppercase;}
+.btn-edit { background: var(--gold); color: black; }
+.btn-delete { background: var(--danger); }
+.btn-save { background: var(--success); }
+
+.toast {
+    position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 12px 25px;
+    border-radius: 4px; border-left: 5px solid var(--secondary); box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    transform: translateY(100px); opacity: 0; transition: all 0.4s ease; z-index: 2000;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* --- FOOTER --- */
+footer { text-align: center; padding: 2rem; border-top: 1px solid #333; font-size: 0.9rem; color: #666; }
+
+/* --- UTILITY CLASSES --- */
+.d-none { display: none !important; }
+.d-flex { display: flex; }
+.d-flex-center { display: flex; justify-content: center; align-items: center; }
+.d-flex-space-between { display: flex; justify-content: space-between; align-items: center; }
+.grid-auto-fit { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.w-150 { width: 150px; display: inline-block; margin: 0; }
+.bg-panel-dark { background: rgba(0,0,0,0.2); }
+.bg-input-readonly { background: #222; }
+.mt-15 { margin-top: 15px; }
+.mb-15 { margin-bottom: 15px; }
+.border-bottom { border-bottom: 1px solid #333; }
+.pb-15 { padding-bottom: 15px; }
+.text-center { text-align: center; }
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: #000; flex-direction: column; padding: 20px; text-align: center; border-bottom: 2px solid var(--secondary); }
+    .nav-links.active { display: flex; }
+    .menu-toggle { display: block; }
+    .hero h1 { font-size: 2.2rem; }
+    .admin-tabs { flex-direction: column; }
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAVIGATION -->
+<nav>
+    <div class="logo">AWS <span>SYSTEM</span></div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <div class="nav-links">
+        <a href="#home" onclick="closeMenu()">Home</a>
+        <a href="#history" onclick="closeMenu()">History</a>
+        <a href="#academics" onclick="closeMenu()">Academics</a>
+        <a href="#houses" onclick="closeMenu()">Houses</a>
+        <a href="#spirit" onclick="closeMenu()">Spirit</a>
+        <a href="#school-song" onclick="closeMenu()">School Song</a>
+        <a href="#sports" onclick="closeMenu()">Sports</a>
+        <a href="#portal" onclick="closeMenu()" style="color: var(--gold);">Student Portal</a>
+        <a href="#admin" onclick="closeMenu()" style="color: var(--secondary);">Admin Portal</a>
+    </div>
+</nav>
+
+<!-- HERO SECTION -->
+<section id="home" class="hero">
+    <h1>Allan Wilson High School</h1>
+    <div class="motto">"We are Men of Men"</div>
+    <div class="meta">
+        <p>Boys' High School | Harare, Zimbabwe</p>
+        <p>Est. 1940 • Technical & Academic Excellence</p>
+    </div>
+    <a href="#history" class="cta-btn">Explore Our Legacy</a>
+</section>
+
+<!-- HISTORY SECTION -->
+<section id="history">
+    <h2 class="section-title">History & Identity</h2>
+    <div class="info-grid">
+        <div class="card">
+            <h3>🏛️ Origins (1940)</h3>
+            <p>Founded in 1940, the school site originally served as a hospital for 25 years. Named after British Army officer Allan Wilson, it was accorded "technical high school" status in 1952, establishing a long tradition of practical and academic rigor.</p>
+        </div>
+        <div class="card">
+            <h3>📍 Location & Neighbors</h3>
+            <p>Allan Wilson is located in Harare, Zimbabwe. It shares a boundary fence with Prince Edward School to the north and Harare Polytechnic to the south.</p>
+            <span class="coordinates">📍 17.77015°S 31.01076°E</span>
+        </div>
+        <div class="card">
+            <h3>🛠️ Technical Evolution</h3>
+            <p>Originally academically selective with a technical/scientific curriculum, the school broadened its scope in 1974. AWS places a strong emphasis on industrial arts, offering hands-on experience in metalwork, woodwork, and technical drawing.</p>
+        </div>
+        <div class="card">
+            <h3>🤝 Sister School</h3>
+            <p>Our sister school is <strong>Queen Elizabeth Girls' High School</strong>, which was founded in the same year, 1940.</p>
+        </div>
+        <div class="card">
+            <h3>Current School Head</h3>
+            <p> <strong> MR JANUARY</strong></p>
+        </div>
+        <div class="card">
+            <h3>Current School Vice-Head</h3>
+            <p><strong> MR KUFANDIRORI</strong></p>
+        </div>
+    </div>
+</section>
+
+<!-- SCHOOL SONG SECTION -->
+<section id="school-song">
+    <h2 class="section-title">School Song</h2>
+    <div class="info-grid">
+        <div class="card">
+            <h3>School Song</h3>
+            <p>Here stands the sable nigh</p>
+            <p>Rising at dawn ,horns erect day light</p>
+            <p>Galloping with strength never to let die till dusk to bring victory shoulder high</p>
+            <p>We are the sables brothers of one accord marching gentlemen in black holding the sword of excellence shinning men of men generation to generation we shall lead</p>
+            <p>Tho there are kings and queens</p>
+            <p>Some lords and ladies</p>
+            <p>Some sirs and saints</p>
+            <p>Even princes</p>
+            <p>Eunuchs but we are men of men truly we are</p>
+            <p>We are the sables brothers of one accord marching gentlemen in black wilsonians with a heritage</p>
+            <p>Generation to generation</p>
+            <p>We shall lead</p>
+            <p>Shall lead</p>
+        </div>
+    </div>
+</section>
+
+<!-- ACADEMICS SECTION (UPDATED) -->
+<section id="academics">
+    <h2 class="section-title">Academic Departments</h2>
+    <div class="info-grid">
+        <div class="card">
+            <h3>📚 Curriculum</h3>
+            <p>Since 1988, the school has followed the ZIMSEC protocol. O-Levels are written at the end of Form IV, and A-Levels at the end of Form VI.</p>
+            <p class="mt-15">We offer a comprehensive range of subjects from Sciences to Commercials, Arts, and Technical disciplines.</p>
+        </div>
+        <div class="card">
+            <h3>🔬 Sciences</h3>
+            <ul style="margin-top:15px; color:#ccc; list-style: circle; margin-left: 20px;">
+                <li>Biology</li>
+                <li>Chemistry</li>
+                <li>Physics</li>
+                <li>Computer Science</li>
+                <li>Mathematics</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>📈 Commercials</h3>
+            <ul style="margin-top:15px; color:#ccc; list-style: circle; margin-left: 20px;">
+                <li>Accounting</li>
+                <li>Business Studies</li>
+                <li>Statistics</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>🎨 Arts & Humanities</h3>
+            <ul style="margin-top:15px; color:#ccc; list-style: circle; margin-left: 20px;">
+                <li>English</li>
+                <li>Literature in English</li>
+                <li>Literature in Shona</li>
+                <li>History</li>
+                <li>Geography</li>
+                <li>Art and Design</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>🔧 Technical & Physical</h3>
+            <ul style="margin-top:15px; color:#ccc; list-style: circle; margin-left: 20px;">
+                <li>Design & Technology</li>
+                <li>Physical Education</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- HOUSES SECTION -->
+<section id="houses">
+    <h2 class="section-title">The House System</h2>
+    <div class="houses-grid">
+        <div class="house-card house-red">
+            <div class="house-header">Red House</div>
+            <div class="house-body">Colonial Name: Wellington<br>Type: Day Scholar</div>
+        </div>
+        <div class="house-card house-yellow">
+            <div class="house-header">Yellow House</div>
+            <div class="house-body">Colonial Name: Newton<br>Type: Day Scholar</div>
+        </div>
+        <div class="house-card house-green">
+            <div class="house-header">Green House</div>
+            <div class="house-body">Colonial Name: Browning<br>Type: Day Scholar<br>Mascot: Bear</div>
+        </div>
+        <div class="house-card house-blue">
+            <div class="house-header">Blue House</div>
+            <div class="house-body">Colonial Name: Scott<br>Mascot: Shumba (Lion)<br>Type: Day Scholar</div>
+        </div>
+        <div class="house-card house-white">
+            <div class="house-header">White House</div>
+            <div class="house-body">Colonial Name: Shangani<br>Mascot: Road Runner<br>Type: Boarding / Day</div>
+        </div>
+        <div class="house-card house-lilac">
+            <div class="house-header">Bulldog House</div>
+            <div class="house-body">Colonial Name: Burnham<br>Color: Lilac<br>Type: Boarding / Day</div>
+        </div>
+    </div>
+</section>
+
+<!-- SPIRIT SECTION -->
+<section id="spirit">
+    <h2 class="section-title">School Spirit</h2>
+    <div class="mascot-display">
+        <span class="mascot-icon">🦌</span>
+        <h3 style="color: var(--secondary); font-size: 1.5rem;">Mascot: Sable Antelope</h3>
+        <p style="color: #888;">Team Name: Sables | Nickname: AWS (A-Dub)</p>
+        <p style="color: var(--gold); margin-top:5px; font-weight:bold;">"Sables the rare species"</p>
+    </div>
+    <div class="war-cry-container">
+        <h4 style="color: var(--gold); margin-bottom: 10px; letter-spacing: 2px;">THE WAR CRY</h4>
+        <div class="war-cry-text">
+            "Umkhulubafana, dzibabana,<br>Izichesuzubaba, dzibabana,<br>Klahba, vimba, khosa, duma, zha, zhavella,<br>Allan Wilson, waah!"
+        </div>
+    </div>
+    <div class="d-flex-center" style="margin-top: 2rem;">
+        <h3 style="color: white; margin-bottom: 10px;">School Colours</h3>
+        <div class="d-flex" style="justify-content: center; gap: 20px;">
+            <div style="width: 50px; height: 50px; background: black; border: 1px solid #333;"></div>
+            <div style="width: 50px; height: 50px; background: #D32F2F;"></div>
+            <div style="width: 50px; height: 50px; background: white; border: 1px solid #333;"></div>
+        </div>
+        <p style="margin-top: 10px; color: var(--text-dim);">Black • Red • White</p>
+    </div>
+</section>
+
+<!-- SPORTS SECTION -->
+<section id="sports">
+    <h2 class="section-title">Sports & Activities</h2>
+    <div class="info-grid">
+        <div class="card">
+            <h3>🏉 Major Sports</h3>
+            <p>The school competes in a wide variety of disciplines, fostering excellence and teamwork.</p>
+            <ul style="margin-top: 15px; margin-left: 20px; color: #ccc; list-style: circle;">
+                <li>Rugby</li>
+                <li>Field Hockey</li>
+                <li>Football (Soccer)</li>
+                <li>Cricket</li>
+                <li>Tennis</li>
+                <li>Volley Ball</li>
+                <li>Kick Boxing</li>
+                <li>Badminton</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>🏊 Aquatics & Athletics</h3>
+            <p>Excelling in physical development and competitive sports.</p>
+            <ul style="margin-top: 15px; margin-left: 20px; color: #ccc; list-style: circle;">
+                <li>Water Polo</li>
+                <li>Swimming</li>
+                <li>Athletics (Track & Field)</li>
+                <li>Basketball</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ADMIN PORTAL SECTION -->
+<section id="admin">
+    <h2 class="section-title">Admin Portal</h2>
+    <div class="portal-container">
+        <!-- Admin Login -->
+        <div id="admin-login" class="dashboard-view active d-flex-center">
+            <div style="text-align: center; width: 100%;">
+                <h3 style="color:var(--gold); margin-bottom:20px; text-transform: uppercase;">Admin Access</h3>
+                <input type="password" id="admin-pass" placeholder="Admin Password" />
+                <button class="cta-btn" onclick="handleAdminLogin()" style="width:100%; margin-top:15px; background: var(--gold); color: black;">Login</button>
+                <p style="margin-top:15px; font-size:0.8rem; color:#666;">Default: allanwilson</p>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="admin-panel" class="dashboard-view">
+            <div class="d-flex-space-between mb-15 border-bottom pb-15">
+                <h3 style="color:var(--gold); font-size:1.2rem;">Administration Panel</h3>
+                <button onclick="logoutAdmin()" class="btn-small btn-delete">Logout</button>
+            </div>
+
+            <!-- Admin Tabs -->
+            <div class="admin-tabs">
+                <button class="admin-tab-btn active" onclick="switchAdminTab('students', this)">Students</button>
+                <button class="admin-tab-btn" onclick="switchAdminTab('fees', this)">Fees</button>
+                <button class="admin-tab-btn" onclick="switchAdminTab('results', this)">Results</button>
+                <button class="admin-tab-btn" onclick="switchAdminTab('news', this)">News</button>
+            </div>
+
+            <!-- TAB: STUDENTS -->
+            <div id="admin-tab-students" class="admin-content-section">
+                <!-- Add Student Form -->
+                <div class="bg-panel-dark" style="padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                    <h4 style="color: white; margin-bottom: 10px; text-transform: uppercase;">Add New Student</h4>
+                    <div class="grid-auto-fit">
+                        <input type="text" id="new-st-name" placeholder="Full Name" />
+                        <input type="text" id="new-st-id" placeholder="Student ID" />
+                        <input type="text" id="new-st-pass" placeholder="Default Password" />
+                        <select id="new-st-form">
+                            <option value="1">Form 1</option>
+                            <option value="2">Form 2</option>
+                            <option value="3">Form 3</option>
+                            <option value="4">Form 4</option>
+                            <option value="5">Form 5</option>
+                            <option value="6">Form 6</option>
+                        </select>
+                        <select id="new-st-type">
+                            <option value="Day">Day Scholar</option>
+                            <option value="Boarding">Boarder</option>
+                        </select>
+                        <button class="cta-btn btn-save" onclick="addNewStudent()" style="padding: 10px;">Add Student</button>
+                    </div>
+                </div>
+
+                <!-- Student Tables Selector -->
+                <div class="mb-15 d-flex" style="align-items: center; gap: 10px;">
+                    <label>Viewing Class:</label>
+                    <select id="admin-form-selector" class="w-150" onchange="renderStudentTable()">
+                        <option value="1">Form 1</option>
+                        <option value="2">Form 2</option>
+                        <option value="3">Form 3</option>
+                        <option value="4">Form 4</option>
+                        <option value="5">Form 5</option>
+                        <option value="6">Form 6</option>
+                    </select>
+                </div>
+
+                <div class="table-container">
+                    <table id="students-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Sport</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: FEES -->
+            <div id="admin-tab-fees" class="admin-content-section d-none">
+                <div class="mb-15">
+                    <label>Select Student ID to Update Fees:</label>
+                    <select id="fee-student-selector" onchange="loadStudentFeeDetails()">
+                        <option value="">-- Choose Student --</option>
+                        <!-- Populated JS -->
+                    </select>
+                </div>
+
+                <div id="fee-editor-container" class="d-none bg-panel-dark" style="padding: 20px; border-radius: 5px; border: 1px solid var(--gold);">
+                    <h4 style="color: var(--gold); margin-bottom: 15px;">Update Financials</h4>
+                    <p id="fee-student-name" style="color: white; margin-bottom: 15px;"></p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Term</th>
+                                    <th>Amount Paid (ZWL)</th>
+                                    <th>Balance (ZWL)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Term 1</td>
+                                    <td><input type="number" id="fee-t1-paid" oninput="calculateBalance(1)"></td>
+                                    <td><input type="number" id="fee-t1-bal" readonly class="bg-input-readonly"></td>
+                                </tr>
+                                <tr>
+                                    <td>Term 2</td>
+                                    <td><input type="number" id="fee-t2-paid" oninput="calculateBalance(2)"></td>
+                                    <td><input type="number" id="fee-t2-bal" readonly class="bg-input-readonly"></td>
+                                </tr>
+                                <tr>
+                                    <td>Term 3</td>
+                                    <td><input type="number" id="fee-t3-paid" oninput="calculateBalance(3)"></td>
+                                    <td><input type="number" id="fee-t3-bal" readonly class="bg-input-readonly"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex" style="justify-content: flex-end; margin-top: 15px;">
+                        <button class="cta-btn btn-save" onclick="saveFees()">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: RESULTS -->
+            <div id="admin-tab-results" class="admin-content-section d-none">
+                <div class="mb-15">
+                    <label>Select Student to Update Results:</label>
+                    <select id="result-student-selector" onchange="loadStudentResults()">
+                        <option value="">-- Choose Student --</option>
+                    </select>
+                </div>
+
+                <div id="result-editor-container" class="d-none bg-panel-dark" style="padding: 20px; border-radius: 5px; border: 1px solid var(--gold);">
+                    <h4 style="color: var(--gold); margin-bottom: 15px;">Report Card Editor</h4>
+                    <p id="result-student-name" style="color: white; margin-bottom: 15px;"></p>
+                    <div class="table-container">
+                        <table class="grade-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Term 1</th>
+                                    <th>Term 2</th>
+                                    <th>Term 3</th>
+                                    <th>Total</th>
+                                    <th>Average</th>
+                                </tr>
+                            </thead>
+                            <tbody id="result-table-body">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex" style="justify-content: flex-end; margin-top: 15px;">
+                        <button class="cta-btn btn-save" onclick="saveResults()">Save Results</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: NEWS -->
+            <div id="admin-tab-news" class="admin-content-section d-none">
+                <div class="bg-panel-dark" style="padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                    <h4 style="color: white; margin-bottom: 10px; text-transform: uppercase;">Post News</h4>
+                    <input type="text" id="news-title" placeholder="News Headline" />
+                    <textarea id="news-content" rows="3" placeholder="News content..."></textarea>
+                    
+                    <!-- FILE UPLOAD INPUT -->
+                    <div style="margin-bottom: 10px;">
+                        <label style="display:block; font-size: 0.8rem; color: #888;">Upload Image (Device):</label>
+                        <input type="file" id="news-img-file" accept="image/*" />
+                    </div>
+                    
+                    <button id="post-news-btn" class="cta-btn btn-save" onclick="handlePostNews()" style="margin-top: 10px;">Post Update</button>
+                </div>
+                <h4 style="color: #888; font-size: 0.9rem; text-transform: uppercase;">Recent Posts</h4>
+                <div id="admin-news-preview">
+                    <!-- Populated JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STUDENT PORTAL SECTION -->
+<section id="portal">
+    <h2 class="section-title">Student Portal</h2>
+    <div class="portal-container">
+        
+        <!-- SINGLE VIEW LOGIN -->
+        <div id="student-login-step-1" class="dashboard-view active d-flex-center">
+            <div style="text-align: center; width: 100%; max-width: 400px;">
+                <h3 style="color:white; margin-bottom:20px; text-transform: uppercase;">Identify Yourself</h3>
+                
+                <!-- ID Input -->
+                <div id="id-input-group" style="margin-bottom: 15px;">
+                    <input type="text" id="login-id" placeholder="Enter Student ID" />
+                </div>
+
+                <!-- Password Input (Hidden by default) -->
+                <div id="pass-input-group" class="d-none">
+                    <input type="password" id="login-pass" placeholder="Password" />
+                </div>
+
+                <!-- Action Buttons -->
+                <div id="login-action-group">
+                    <button id="main-login-btn" class="cta-btn" onclick="handleLoginFlow()">Next</button>
+                    <button onclick="resetStudentLogin()" style="background:none; border:none; color:#666; margin-top:10px; cursor:pointer; display:none;" id="reset-link">Back</button>
+                </div>
+                <p style="margin-top:15px; font-size:0.8rem; color:#666;">Enter ID to verify account details.</p>
+            </div>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div id="student-dashboard" class="dashboard-view">
+            <div class="d-flex-space-between mb-15 border-bottom pb-15">
+                <div>
+                    <h3 id="dash-name" style="color:white; font-size:1.4rem;">Name</h3>
+                    <span id="dash-details" style="color:var(--secondary); font-size:0.9rem;">Form 1 • Day Scholar</span>
+                </div>
+                <button onclick="logoutStudent()" class="btn-small btn-delete">Logout</button>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="grid-auto-fit" style="grid-template-columns: 1fr 1fr;">
+                <!-- Fees Section -->
+                <div class="bg-panel-dark" style="padding: 15px; border-radius: 5px; border: 1px solid #333;">
+                    <h4 style="color: var(--gold); margin-bottom: 10px; text-transform: uppercase;">Fees Status</h4>
+                    <div id="student-fee-list"></div>
+                </div>
+                <!-- Sports Selection -->
+                <div class="bg-panel-dark" style="padding: 15px; border-radius: 5px; border: 1px solid #333;">
+                    <h4 style="color: var(--info); margin-bottom: 10px; text-transform: uppercase;">Sports Selection</h4>
+                    <label for="student-sports-select">Choose your sport:</label>
+                    <select id="student-sports-select">
+                        <option value="">-- Select Sport --</option>
+                        <option value="Rugby">Rugby</option>
+                        <option value="Field Hockey">Field Hockey</option>
+                        <option value="Football">Football (Soccer)</option>
+                        <option value="Volley Ball">Volley Ball</option>
+                        <option value="Cricket">Cricket</option>
+                        <option value="Tennis">Tennis</option>
+                        <option value="Water Polo">Water Polo</option>
+                        <option value="Basketball">Basketball</option>
+                        <option value="Swimming">Swimming</option>
+                        <option value="Athletics">Athletics</option>
+                        <option value="Kick Boxing">Kick Boxing</option>
+                        <option value="Badminton">Badminton</option>
+                    </select>
+                    <button class="btn-small btn-save" onclick="saveSportsChoice()" style="width: 100%; margin-top: 10px;">Update Sport</button>
+                </div>
+            </div>
+
+            <!-- Results Section (New) -->
+            <div style="margin-top: 30px;">
+                <div class="bg-panel-dark" style="padding: 15px; border-radius: 5px; border: 1px solid var(--secondary);">
+                    <h4 style="color: var(--gold); margin-bottom: 10px; text-transform: uppercase;">Exam Results / Report Card</h4>
+                    <div class="table-container">
+                        <table class="grade-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>T1</th>
+                                    <th>T2</th>
+                                    <th>T3</th>
+                                    <th>Total</th>
+                                    <th>Avg</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody id="student-result-body">
+                                <!-- Populated JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News Feed -->
+            <div style="margin-top: 30px;">
+                <h4 style="color: white; margin-bottom: 15px; border-left: 3px solid var(--secondary); padding-left: 10px;">School News & Notices</h4>
+                <div id="student-news-feed"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>&copy; 2026 Allan Wilson High School Information System.</p>
+    <p style="font-size: 0.8rem; margin-top: 5px;">Powered by AWS</p>
+    <p style="margin-top: 15px; color: var(--secondary); font-weight: 500; font-size: 0.9rem;">Web System by Student Tafara Rushwaya</p>
+</footer>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast" class="toast">Action Successful</div>
+
+<!-- JAVASCRIPT LOGIC -->
+<script>
+// ==========================================
+// 1. CONFIG & DATA MANAGEMENT
+// ==========================================
+const TERM_FEE = 190; 
+
+// UPDATED SUBJECTS LIST
+const SUBJECTS = [
+    "Accounting",
+    "Art and Design",
+    "Biology",
+    "Business Studies",
+    "Chemistry",
+    "Computer Science",
+    "Design & Technology",
+    "English",
+    "Geography",
+    "History",
+    "Literature in English",
+    "Literature in Shona",
+    "Mathematics",
+    "Physical Education",
+    "Physics",
+    "Statistics"
+];
+
+const DB = {
+    get: (key) => {
+        try {
+            return JSON.parse(localStorage.getItem('aws_' + key)) || [];
+        } catch (e) {
+            console.error("Data Corrupt, resetting key:", key);
+            return [];
+        }
+    },
+    set: (key, val) => localStorage.setItem('aws_' + key, JSON.stringify(val))
+};
+
+let currentStudentId = null;
+let tempLoginId = null;
+
+// ==========================================
+// 2. BACKGROUND ANIMATION
+// ==========================================
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+const particleCount = 60;
+const color = '183, 28, 28'; // Red
+
+class Particle {
+    constructor() { this.reset(); }
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2;
+        this.speedX = Math.random() * 1 - 0.5;
+        this.speedY = Math.random() * 1 - 0.5;
+    }
+    update() {
+        this.x += this.speedX; this.y += this.speedY;
+        if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+        if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+    }
+    draw() {
+        ctx.fillStyle = `rgba(${color}, 0.6)`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+function initParticles() {
+    resizeCanvas();
+    particles = [];
+    for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    for (let a = 0; a < particles.length; a++) {
+        for (let b = a; b < particles.length; b++) {
+            let dx = particles[a].x - particles[b].x;
+            let dy = particles[a].y - particles[b].y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < 100) {
+                ctx.strokeStyle = `rgba(${color}, ${1 - distance / 100})`;
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.moveTo(particles[a].x, particles[a].y);
+                ctx.lineTo(particles[b].x, particles[b].y);
+                ctx.stroke();
+            }
+        }
+    }
+    requestAnimationFrame(animate);
+}
+
+window.addEventListener('resize', resizeCanvas);
+
+// ==========================================
+// 3. UI HELPERS
+// ==========================================
+function toggleMenu() { document.querySelector('.nav-links').classList.toggle('active'); }
+function closeMenu() { document.querySelector('.nav-links').classList.remove('active'); }
+
+function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.innerText = msg;
+    t.style.borderLeftColor = (type === 'danger') ? 'var(--danger)' : 'var(--secondary)';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function switchView(viewId) {
+    document.querySelectorAll('.dashboard-view').forEach(el => el.classList.remove('active'));
+    const target = document.getElementById(viewId);
+    if(target) target.classList.add('active');
+}
+
+// ==========================================
+// 4. STUDENT PORTAL LOGIC
+// ==========================================
+
+// --- Login State Management ---
+let loginState = 'ID_INPUT'; // 'ID_INPUT' or 'PASSWORD_INPUT'
+
+// Add Enter Key Listeners for better UX
+function initLoginListeners() {
+    const idInput = document.getElementById('login-id');
+    const passInput = document.getElementById('login-pass');
+
+    idInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            handleLoginFlow();
+        }
+    });
+
+    passInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            handleLoginFlow();
+        }
+    });
+}
+
+function handleLoginFlow() {
+    if (loginState === 'ID_INPUT') {
+        // Check ID
+        const idInput = document.getElementById('login-id').value.trim();
+        if(!idInput) {
+            showToast("Please enter a Student ID", "danger");
+            return;
+        }
+
+        const students = DB.get('students');
+        const found = students.find(s => s.id === idInput);
+
+        if (found) {
+            tempLoginId = idInput;
+            // Switch UI to Password Mode
+            loginState = 'PASSWORD_INPUT';
+            
+            // Hide ID Input, Show Password Input
+            document.getElementById('id-input-group').classList.add('d-none');
+            document.getElementById('pass-input-group').classList.remove('d-none');
+            document.getElementById('login-pass').value = ""; // Clear password field just in case
+            document.getElementById('reset-link').style.display = 'block'; // Show reset button
+            
+            // Change Button Text
+            const btn = document.getElementById('main-login-btn');
+            btn.innerText = "Login";
+            
+            // Focus password for UX
+            setTimeout(() => document.getElementById('login-pass').focus(), 100);
+
+        } else {
+            showToast("Student ID not found. Please contact Admin.", "danger");
+        }
+    } else if (loginState === 'PASSWORD_INPUT') {
+        verifyStudentPassword();
+    }
+}
+
+function verifyStudentPassword() {
+    const passInput = document.getElementById('login-pass').value.trim();
+    if(!passInput) {
+        showToast("Please enter your password", "danger");
+        return;
+    }
+
+    const students = DB.get('students');
+    const student = students.find(s => s.id === tempLoginId);
+
+    if (student && student.pass === passInput) {
+        currentStudentId = tempLoginId;
+        loadStudentDashboard(student);
+        switchView('student-dashboard');
+        
+        // Reset Login State for next time
+        resetStudentLoginUI();
+        
+    } else {
+        showToast("Invalid Password.", "danger");
+    }
+}
+
+function resetStudentLogin() {
+    loginState = 'ID_INPUT';
+    resetStudentLoginUI();
+}
+
+function resetStudentLoginUI() {
+    document.getElementById('login-pass').value = "";
+    // IMPROVED: Do NOT clear the ID input value when going back, so user can edit typo
+    // document.getElementById('login-id').value = ""; 
+    document.getElementById('id-input-group').classList.remove('d-none');
+    document.getElementById('pass-input-group').classList.add('d-none');
+    document.getElementById('reset-link').style.display = 'none';
+    const btn = document.getElementById('main-login-btn');
+    btn.innerText = "Next";
+}
+
+function logoutStudent() {
+    currentStudentId = null;
+    // Clear ID on full logout for security
+    document.getElementById('login-id').value = "";
+    switchView('student-login-step-1'); // Point back to single login view
+    resetStudentLoginUI();
+    showToast("Logged out successfully");
+}
+
+function loadStudentDashboard(student) {
+    document.getElementById('dash-name').innerText = student.name;
+    document.getElementById('dash-details').innerText = `Form ${student.form} • ${student.type} Scholar`;
+    document.getElementById('student-sports-select').value = student.sports || "";
+    
+    // Fees
+    const feeList = document.getElementById('student-fee-list');
+    feeList.innerHTML = "";
+    ['t1', 't2', 't3'].forEach((term, idx) => {
+        const tName = "Term " + (idx + 1);
+        const paid = student.fees[term]?.paid || 0;
+        const bal = student.fees[term]?.bal || TERM_FEE;
+        feeList.innerHTML += `<div class="d-flex" style="justify-content:space-between; margin-bottom:5px; border-bottom:1px solid #222; padding-bottom:5px;"><span style="color:#bbb;">${tName}</span><div><span style="color:var(--success); margin-right:10px;">Paid: ${paid}</span><span style="color:var(--secondary);">Bal: ${bal}</span></div></div>`;
+    });
+
+    // Results
+    renderStudentReportCard(student);
+
+    // News
+    renderNewsFeed('student-news-feed', true);
+}
+
+function saveSportsChoice() {
+    if (!currentStudentId) return;
+    const choice = document.getElementById('student-sports-select').value;
+    let students = DB.get('students');
+    let idx = students.findIndex(s => s.id === currentStudentId);
+    if (idx !== -1) {
+        students[idx].sports = choice;
+        DB.set('students', students);
+        showToast("Sport choice updated!");
+    }
+}
+
+// --- Report Card Logic ---
+function getGrade(avg) {
+    if (avg >= 80) return { symbol: 'A', class: 'grade-distinction' };
+    if (avg >= 70) return { symbol: 'B', class: 'grade-pass' };
+    if (avg >= 60) return { symbol: 'C', class: 'grade-pass' };
+    if (avg >= 50) return { symbol: 'D', class: 'grade-pass' };
+    return { symbol: 'F', class: 'grade-fail' };
+}
+
+function renderStudentReportCard(student) {
+    const tbody = document.getElementById('student-result-body');
+    tbody.innerHTML = "";
+    
+    if (!student.grades || student.grades.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="color:#666;">No results available yet.</td></tr>`;
+        return;
+    }
+
+    student.grades.forEach(sub => {
+        const total = (sub.t1 || 0) + (sub.t2 || 0) + (sub.t3 || 0);
+        const count = ((sub.t1 || 0) ? 1 : 0) + ((sub.t2 || 0) ? 1 : 0) + ((sub.t3 || 0) ? 1 : 0);
+        const avg = count > 0 ? (total / count).toFixed(1) : 0;
+        const grade = getGrade(avg);
+
+        tbody.innerHTML += `
+            <tr>
+                <td style="text-align:left; color:#ccc;">${sub.subject}</td>
+                <td>${sub.t1}</td>
+                <td>${sub.t2}</td>
+                <td>${sub.t3}</td>
+                <td>${total}</td>
+                <td>${avg}</td>
+                <td class="${grade.class}">${grade.symbol}</td>
+            </tr>
+        `;
+    });
+}
+
+// ==========================================
+// 5. ADMIN PORTAL LOGIC
+// ==========================================
+function handleAdminLogin() {
+    const pass = document.getElementById('admin-pass').value;
+    if (pass === "allanwilson") {
+        document.getElementById('admin-pass').value = "";
+        switchView('admin-panel');
+        initAdminPanel();
+    } else {
+        showToast("Invalid Admin Password", "danger");
+    }
+}
+
+function logoutAdmin() {
+    switchView('admin-login');
+    showToast("Admin Logged Out");
+}
+
+function switchAdminTab(tabName, btn) {
+    document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.admin-content-section').forEach(s => s.classList.add('d-none'));
+    document.getElementById('admin-tab-' + tabName).classList.remove('d-none');
+
+    if (tabName === 'students') renderStudentTable();
+    if (tabName === 'fees') populateFeeSelector();
+    if (tabName === 'results') populateResultSelector();
+    if (tabName === 'news') renderNewsFeed('admin-news-preview', false);
+}
+
+function initAdminPanel() {
+    renderStudentTable();
+    populateFeeSelector();
+    populateResultSelector();
+    renderNewsFeed('admin-news-preview', false);
+}
+
+// --- Admin: Students ---
+function addNewStudent() {
+    const name = document.getElementById('new-st-name').value.trim();
+    const id = document.getElementById('new-st-id').value.trim();
+    const pass = document.getElementById('new-st-pass').value.trim();
+    const form = document.getElementById('new-st-form').value;
+    const type = document.getElementById('new-st-type').value;
+
+    if (!name || !id || !pass) {
+        showToast("Please fill all fields", "danger");
+        return;
+    }
+
+    const students = DB.get('students');
+    if (students.some(s => s.id === id)) {
+        showToast("Student ID already exists", "danger");
+        return;
+    }
+
+    // Initialize grades with 0s for all subjects
+    const initialGrades = SUBJECTS.map(sub => ({ subject: sub, t1: 0, t2: 0, t3: 0 }));
+
+    const newStudent = {
+        id, name, pass, form, type, sports: "",
+        fees: { t1: { paid: 0, bal: TERM_FEE }, t2: { paid: 0, bal: TERM_FEE }, t3: { paid: 0, bal: TERM_FEE } },
+        grades: initialGrades
+    };
+
+    students.push(newStudent);
+    DB.set('students', students);
+    document.getElementById('new-st-name').value = "";
+    document.getElementById('new-st-id').value = "";
+    document.getElementById('new-st-pass').value = "";
+    showToast("Student Added Successfully");
+    renderStudentTable();
+}
+
+function renderStudentTable() {
+    const formFilter = document.getElementById('admin-form-selector').value;
+    const students = DB.get('students').filter(s => s.form.toString() === formFilter);
+    const tbody = document.querySelector('#students-table tbody');
+    tbody.innerHTML = "";
+    if (students.length === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#666;">No students in Form ${formFilter}</td></tr>`; return; }
+    students.forEach((s) => {
+        const globalIndex = DB.get('students').findIndex(st => st.id === s.id);
+        const tagClass = s.type === 'Boarding' ? 'tag-boarding' : 'tag-day';
+        tbody.innerHTML += `<tr><td>${s.id}</td><td style="color:white; font-weight:bold;">${s.name}</td><td><span class="tag ${tagClass}">${s.type}</span></td><td>${s.sports || '<span style="color:#666; font-style:italic;">None</span>'}</td><td><button class="btn-small btn-delete" onclick="deleteStudent(${globalIndex})">Delete</button></td></tr>`;
+    });
+}
+
+function deleteStudent(index) {
+    if (confirm("Are you sure?")) {
+        let students = DB.get('students');
+        students.splice(index, 1);
+        DB.set('students', students);
+        renderStudentTable();
+        showToast("Student deleted");
+    }
+}
+
+// --- Admin: Fees ---
+function populateFeeSelector() {
+    const selector = document.getElementById('fee-student-selector');
+    const students = DB.get('students');
+    selector.innerHTML = '<option value="">-- Choose Student --</option>';
+    students.forEach(s => { selector.innerHTML += `<option value="${s.id}">${s.id} - ${s.name} (Form ${s.form})</option>`; });
+}
+
+function loadStudentFeeDetails() {
+    const id = document.getElementById('fee-student-selector').value;
+    const container = document.getElementById('fee-editor-container');
+    if (!id) { container.classList.add('d-none'); return; }
+    const students = DB.get('students');
+    const s = students.find(st => st.id === id);
+    if (!s) { container.classList.add('d-none'); return; }
+    document.getElementById('fee-student-name').innerText = `Editing Fees for: ${s.name} (${s.id})`;
+    document.getElementById('fee-t1-paid').value = s.fees.t1?.paid || 0;
+    document.getElementById('fee-t1-bal').value = s.fees.t1?.bal || TERM_FEE;
+    document.getElementById('fee-t2-paid').value = s.fees.t2?.paid || 0;
+    document.getElementById('fee-t2-bal').value = s.fees.t2?.bal || TERM_FEE;
+    document.getElementById('fee-t3-paid').value = s.fees.t3?.paid || 0;
+    document.getElementById('fee-t3-bal').value = s.fees.t3?.bal || TERM_FEE;
+    container.classList.remove('d-none');
+}
+
+function calculateBalance(term) {
+    const paidVal = parseFloat(document.getElementById(`fee-t${term}-paid`).value) || 0;
+    document.getElementById(`fee-t${term}-bal`).value = TERM_FEE - paidVal;
+}
+
+function saveFees() {
+    const id = document.getElementById('fee-student-selector').value;
+    if (!id) return;
+    let students = DB.get('students');
+    const idx = students.findIndex(s => s.id === id);
+    if (idx !== -1) {
+        students[idx].fees.t1.paid = parseFloat(document.getElementById('fee-t1-paid').value) || 0;
+        students[idx].fees.t1.bal = parseFloat(document.getElementById('fee-t1-bal').value) || 0;
+        students[idx].fees.t2.paid = parseFloat(document.getElementById('fee-t2-paid').value) || 0;
+        students[idx].fees.t2.bal = parseFloat(document.getElementById('fee-t2-bal').value) || 0;
+        students[idx].fees.t3.paid = parseFloat(document.getElementById('fee-t3-paid').value) || 0;
+        students[idx].fees.t3.bal = parseFloat(document.getElementById('fee-t3-bal').value) || 0;
+        DB.set('students', students);
+        showToast("Fees Updated Successfully");
+    }
+}
+
+// --- Admin: Results (New) ---
+function populateResultSelector() {
+    const selector = document.getElementById('result-student-selector');
+    const students = DB.get('students');
+    selector.innerHTML = '<option value="">-- Choose Student --</option>';
+    students.forEach(s => { selector.innerHTML += `<option value="${s.id}">${s.id} - ${s.name} (Form ${s.form})</option>`; });
+}
+
+function loadStudentResults() {
+    const id = document.getElementById('result-student-selector').value;
+    const container = document.getElementById('result-editor-container');
+    if (!id) { container.classList.add('d-none'); return; }
+    const students = DB.get('students');
+    const s = students.find(st => st.id === id);
+    if (!s) { container.classList.add('d-none'); return; }
+    
+    document.getElementById('result-student-name').innerText = `Editing Results for: ${s.name} (${s.id})`;
+    const tbody = document.getElementById('result-table-body');
+    tbody.innerHTML = "";
+
+    // Ensure student has grades array
+    if (!s.grades) {
+        s.grades = SUBJECTS.map(sub => ({ subject: sub, t1: 0, t2: 0, t3: 0 }));
+    }
+
+    s.grades.forEach((sub, index) => {
+        const total = (sub.t1 || 0) + (sub.t2 || 0) + (sub.t3 || 0);
+        const count = ((sub.t1 || 0) ? 1 : 0) + ((sub.t2 || 0) ? 1 : 0) + ((sub.t3 || 0) ? 1 : 0);
+        const avg = count > 0 ? (total / count).toFixed(1) : 0;
+
+        tbody.innerHTML += `
+            <tr data-index="${index}">
+                <td style="text-align:left; color:#ccc;">${sub.subject}</td>
+                <td><input type="number" class="res-input" data-term="t1" value="${sub.t1}" oninput="updateResultRow(this)"></td>
+                <td><input type="number" class="res-input" data-term="t2" value="${sub.t2}" oninput="updateResultRow(this)"></td>
+                <td><input type="number" class="res-input" data-term="t3" value="${sub.t3}" oninput="updateResultRow(this)"></td>
+                <td class="row-total">${total}</td>
+                <td class="row-avg">${avg}</td>
+            </tr>
+        `;
+    });
+    container.classList.remove('d-none');
+}
+
+function updateResultRow(input) {
+    const tr = input.closest('tr');
+    const index = tr.getAttribute('data-index');
+    const inputs = tr.querySelectorAll('input');
+    let total = 0;
+    let count = 0;
+    inputs.forEach(inp => {
+        const val = parseFloat(inp.value) || 0;
+        total += val;
+        if(val > 0) count++;
+    });
+    
+    tr.querySelector('.row-total').innerText = total;
+    tr.querySelector('.row-avg').innerText = count > 0 ? (total/count).toFixed(1) : 0;
+}
+
+function saveResults() {
+    const id = document.getElementById('result-student-selector').value;
+    if (!id) return;
+    let students = DB.get('students');
+    const idx = students.findIndex(s => s.id === id);
+    
+    if (idx !== -1) {
+        const rows = document.querySelectorAll('#result-table-body tr');
+        rows.forEach((row, index) => {
+            students[idx].grades[index].t1 = parseFloat(row.querySelector('[data-term="t1"]').value) || 0;
+            students[idx].grades[index].t2 = parseFloat(row.querySelector('[data-term="t2"]').value) || 0;
+            students[idx].grades[index].t3 = parseFloat(row.querySelector('[data-term="t3"]').value) || 0;
+        });
+        DB.set('students', students);
+        showToast("Results Saved Successfully");
+    }
+}
+
+// --- Admin: News (Fixed Async Issue) ---
+function handlePostNews() {
+    const fileInput = document.getElementById('news-img-file');
+    const title = document.getElementById('news-title').value.trim();
+    const content = document.getElementById('news-content').value.trim();
+    
+    if (!title || !content) { 
+        showToast("Please enter title and content", "danger"); 
+        return; 
+    }
+
+    // If there is a file, we must read it first (Async)
+    if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            saveNewsItem(title, content, e.target.result);
+        };
+        
+        reader.readAsDataURL(file);
+    } else {
+        // No file, save immediately with default
+        saveNewsItem(title, content, "https://picsum.photos/seed/aws/800/400");
+    }
+}
+
+function saveNewsItem(title, content, imageSrc) {
+    const news = DB.get('news');
+    const newItem = { 
+        id: Date.now(), 
+        title, 
+        content, 
+        img: imageSrc, 
+        date: new Date().toISOString().split('T')[0], 
+        comments: [] 
+    };
+    
+    news.unshift(newItem);
+    DB.set('news', news);
+    
+    // Reset form
+    document.getElementById('news-title').value = "";
+    document.getElementById('news-content').value = "";
+    document.getElementById('news-img-file').value = "";
+    
+    showToast("News Posted");
+    renderNewsFeed('admin-news-preview', false);
+}
+
+function renderNewsFeed(containerId, allowComments) {
+    const container = document.getElementById(containerId);
+    const news = DB.get('news');
+    container.innerHTML = "";
+    news.forEach(item => {
+        let commentsHTML = "";
+        if (item.comments && item.comments.length > 0) {
+            commentsHTML = item.comments.map(c => `<div class="comment-item"><span class="comment-user">${c.user}:</span><span class="comment-text">${c.text}</span></div>`).join('');
+        } else { commentsHTML = `<div style="font-size:0.8rem; color:#444; font-style:italic;">No comments yet.</div>`; }
+        
+        let actionHTML = "";
+        if (allowComments) {
+            actionHTML = `<div class="add-comment-box"><input type="text" id="comment-input-${item.id}" placeholder="Write a comment..."/><button class="btn-small btn-save" onclick="addComment(${item.id})">Post</button></div>`;
+        }
+
+        // Check if image is Base64 (uploaded) or URL
+        const imgSrc = item.img;
+
+        container.innerHTML += `<div class="news-card"><div class="news-header"><h4>${item.title}</h4><span class="news-date">${item.date}</span></div>${item.img ? `<img src="${imgSrc}" class="news-image" onerror="this.src='https://picsum.photos/seed/error/800/400'">` : ''}<div class="news-body">${item.content}</div><div class="news-comments"><div style="margin-bottom:10px; font-weight:bold; color:#666; font-size:0.8rem;">COMMENTS</div><div id="comments-list-${item.id}">${commentsHTML}</div>${actionHTML}</div></div>`;
+    });
+}
+
+function addComment(newsId) {
+    const input = document.getElementById(`comment-input-${newsId}`);
+    const text = input.value.trim();
+    if (!text) return;
+    const news = DB.get('news');
+    const idx = news.findIndex(n => n.id === newsId);
+    if (idx !== -1) {
+        let username = "Guest";
+        if (currentStudentId) {
+            const students = DB.get('students');
+            const s = students.find(st => st.id === currentStudentId);
+            if (s) username = s.name;
+        }
+        news[idx].comments.push({ user: username, text: text });
+        DB.set('news', news);
+        input.value = "";
+        showToast("Comment added");
+        renderNewsFeed('student-news-feed', true);
+    }
+}
+
+// ==========================================
+// 6. INITIALIZATION
+// ==========================================
+function init() {
+    if (DB.get('students').length === 0) { DB.set('students', []); }
+    if (DB.get('news').length === 0) { DB.set('news', []); }
+    initParticles(); animate();
+    initLoginListeners(); // Initialize Enter key listeners
+    renderStudentTable();
+}
+
+// Start everything when DOM is ready
+document.addEventListener('DOMContentLoaded', init);
+
+</script>
+</body>
+</html>
