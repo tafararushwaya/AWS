@@ -8,16 +8,17 @@
 /* --- CSS VARIABLES & THEME --- */
 :root {
     --primary: #000000;
-    --secondary: #B71C1C;
-    --secondary-hover: #d32f2f;
+    /* CHANGED: Red -> Gold */
+    --secondary: #FFD700; 
+    --secondary-hover: #ffea00; /* Lighter Gold for hover */
     --accent: #ffffff;
     --text-dim: #b0b0b0;
     --bg-dark: #0f0f0f;
-    --bg-panel: rgba(20, 20, 20, 0.95);
+    --bg-panel: rgba(20, 20, 20, 0.9);
     --gold: #FFD700;
     --border-color: #333;
     --success: #28a745;
-    --danger: #dc3545;
+    --danger: #dc3545; /* Kept as Red for errors/warnings, but you can change this to Gold too if desired */
     --info: #17a2b8;
 }
 
@@ -32,61 +33,76 @@ ul { list-style: none; }
 #bg-canvas {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
     
+    /* ========================================= */
+    /* PASTE YOUR GITHUB RAW URL BELOW */
+    /* Example: https://raw.githubusercontent.com/user/repo/main/badge.png */
+    /* ========================================= */
     background: url(https://raw.githubusercontent.com/tafararushwaya/AWS/refs/heads/main/Badge.png) no-repeat center center;
     
-    /* If the image is small and you want it to not stretch, change 'cover' to 'contain' */
     background-size: cover; 
-    
-    /* Add a dark overlay so text is readable over the image */
-    background-color: #000; 
+    background-color: #000;
 }
 
-/* Add this overlay block to darken the image slightly for better text readability */
+/* Dark Overlay for Readability */
 #bg-canvas::after {
     content: "";
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Adjust 0.6 for more/less darkness */
+    background: rgba(0, 0, 0, 0.75);
     pointer-events: none;
 }
+
 /* --- NAVIGATION --- */
 nav {
     background: rgba(0, 0, 0, 0.95); padding: 1rem 5%;
     display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 3px solid var(--secondary);
+    border-bottom: 3px solid var(--secondary); /* Border is now Gold */
     position: sticky; top: 0; z-index: 1000;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 }
 .logo { font-size: 1.4rem; font-weight: 800; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; }
-.logo span { color: var(--secondary); }
+.logo span { color: var(--secondary); /* "SYSTEM" is now Gold */ }
 
 .nav-links { display: flex; gap: 20px; }
 .nav-links a {
     color: var(--text-dim); font-weight: 500; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;
     cursor: pointer;
 }
-.nav-links a:hover, .nav-links a.active { color: var(--secondary); }
+.nav-links a:hover, .nav-links a.active { color: var(--secondary); } /* Hover/Active is now Gold */
 .menu-toggle { display: none; color: white; font-size: 1.5rem; cursor: pointer; }
 
 /* --- HERO SECTION --- */
 .hero {
     height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-    padding: 0 20px; background: linear-gradient(to bottom, rgba(0,0,0,0.6), var(--bg-dark)); border-bottom: 1px solid #222;
+    padding: 0 20px; border-bottom: 1px solid #222;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.9)); 
 }
-.hero h1 { font-size: 3.5rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); text-shadow: 0 0 10px rgba(183, 28, 28, 0.5); animation: fadeInDown 1s ease; }
-.hero .motto { font-size: 1.5rem; color: var(--secondary); font-style: italic; margin-bottom: 1.5rem; font-weight: 600; animation: fadeInUp 1s ease 0.2s backwards; }
-.hero .meta { font-size: 1rem; color: var(--text-dim); max-width: 600px; margin-bottom: 2rem; animation: fadeInUp 1s ease 0.4s backwards; }
+.hero h1 { 
+    font-size: 3.5rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); 
+    /* Updated Text Shadow: Red -> Gold */
+    text-shadow: 2px 2px 8px rgba(255, 215, 0, 0.8); 
+    animation: fadeInDown 1s ease; 
+}
+.hero .motto { 
+    font-size: 1.5rem; color: var(--secondary); /* Motto is now Gold */
+    font-style: italic; margin-bottom: 1.5rem; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); animation: fadeInUp 1s ease 0.2s backwards; 
+}
+.hero .meta { font-size: 1rem; color: #ddd; max-width: 600px; margin-bottom: 2rem; text-shadow: 1px 1px 2px black; animation: fadeInUp 1s ease 0.4s backwards; }
 .cta-btn {
-    background: var(--secondary); color: white; padding: 12px 35px; border: none; border-radius: 2px; font-weight: bold;
+    /* CTA Button is now Gold */
+    background: var(--secondary); color: black; 
+    padding: 12px 35px; border: none; border-radius: 2px; font-weight: bold;
     cursor: pointer; font-size: 1rem; text-transform: uppercase; transition: all 0.3s; letter-spacing: 1px; display: inline-block; animation: fadeInUp 1s ease 0.6s backwards;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
-.cta-btn:hover { background: var(--secondary-hover); transform: translateY(-3px); box-shadow: 0 0 15px rgba(183, 28, 28, 0.4); }
+.cta-btn:hover { background: var(--secondary-hover); transform: translateY(-3px); box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); /* Hover shadow is brighter Gold */ }
 
 /* --- SECTIONS COMMON --- */
-section { padding: 80px 5%; border-bottom: 1px solid #222; }
+section { padding: 80px 5%; border-bottom: 1px solid #222; background-color: rgba(15, 15, 15, 0.85); }
 .section-title {
-    text-align: center; font-size: 2.2rem; color: var(--secondary); margin-bottom: 3rem; text-transform: uppercase;
+    text-align: center; font-size: 2.2rem; color: var(--secondary); /* Section Title is now Gold */
+    margin-bottom: 3rem; text-transform: uppercase;
     letter-spacing: 2px; position: relative; display: inline-block; left: 50%; transform: translateX(-50%);
 }
 .section-title::after { content: ''; display: block; width: 60px; height: 3px; background: var(--accent); margin: 10px auto 0; }
@@ -94,8 +110,9 @@ section { padding: 80px 5%; border-bottom: 1px solid #222; }
 /* --- GRID & CARDS --- */
 .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
 .card {
-    background: var(--bg-panel); padding: 2rem; border-top: 4px solid var(--secondary);
+    background: var(--bg-panel); padding: 2rem; border-top: 4px solid var(--secondary); /* Top border is now Gold */
     transition: transform 0.3s, box-shadow 0.3s; border-radius: 4px;
+    backdrop-filter: blur(5px);
 }
 .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 .card h3 { color: white; margin-bottom: 1rem; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
@@ -107,14 +124,14 @@ input, select, textarea {
     width: 100%; padding: 12px 15px; margin: 8px 0; background: rgba(0,0,0,0.6); 
     border: 1px solid #444; color: white; border-radius: 4px; font-size: 1rem; transition: 0.3s;
 }
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 8px rgba(183, 28, 28, 0.3); }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 8px rgba(255, 215, 0, 0.5); /* Focus shadow is now Gold */ }
 label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 5px; text-transform: uppercase; font-weight: bold;}
 
 /* --- TABLE STYLES --- */
 .table-container { overflow-x: auto; margin-top: 20px; }
 table { width: 100%; border-collapse: collapse; min-width: 600px; }
 th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #333; }
-th { background-color: rgba(183, 28, 28, 0.2); color: var(--secondary); text-transform: uppercase; font-size: 0.8rem; }
+th { background-color: rgba(255, 215, 0, 0.2); /* Table headers now have a faint Gold bg */ color: var(--secondary); text-transform: uppercase; font-size: 0.8rem; }
 tr:hover { background-color: rgba(255,255,255,0.03); }
 .tag { padding: 4px 8px; border-radius: 3px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; display: inline-block; margin-right: 5px;}
 .tag-day { background: #1976D2; color: white; }
@@ -125,14 +142,15 @@ tr:hover { background-color: rgba(255,255,255,0.03); }
 .grade-table input { padding: 5px; margin: 0; text-align: center; font-size: 0.9rem; }
 .grade-pass { color: var(--success); font-weight: bold; }
 .grade-fail { color: var(--danger); font-weight: bold; }
-.grade-distinction { color: var(--gold); font-weight: bold; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+.grade-distinction { color: var(--gold); font-weight: bold; text-shadow: 0 0 5px rgba(255, 215, 0, 0.8); }
 
 /* --- HOUSES --- */
 .houses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 .house-card { background: #1a1a1a; border-radius: 8px; overflow: hidden; border: 1px solid #333; transition: transform 0.3s; }
-.house-card:hover { transform: translateY(-5px); border-color: var(--secondary); }
-.house-header { padding: 15px; color: #fff; font-weight: bold; text-transform: uppercase; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; }
+.house-card:hover { transform: translateY(-5px); border-color: var(--secondary); /* Hover border Gold */ }
+.house-header { padding: 15px; color: #000; font-weight: bold; text-transform: uppercase; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; }
 .house-body { padding: 15px; color: var(--text-dim); font-size: 0.9rem; }
+/* Updated House Header Colors */
 .house-red .house-header { background: #D32F2F; }
 .house-yellow .house-header { background: #FBC02D; color: #000; }
 .house-green .house-header { background: #388E3C; }
@@ -141,13 +159,13 @@ tr:hover { background-color: rgba(255,255,255,0.03); }
 .house-lilac .house-header { background: #9C27B0; }
 
 /* --- SPIRIT --- */
-.war-cry-container { text-align: center; background: linear-gradient(45deg, #000, #1a0505); padding: 3rem; border: 2px solid var(--secondary); border-radius: 10px; margin: 2rem 0; box-shadow: 0 0 30px rgba(183, 28, 28, 0.1); }
-.war-cry-text { font-size: 1.8rem; font-weight: 700; color: var(--accent); text-transform: uppercase; line-height: 1.4; letter-spacing: 2px; font-style: italic; }
+.war-cry-container { text-align: center; background: linear-gradient(45deg, #000, #1a0505); padding: 3rem; border: 2px solid var(--secondary); /* Border Gold */ border-radius: 10px; margin: 2rem 0; box-shadow: 0 0 30px rgba(183, 28, 28, 0.1); }
+.war-cry-text { font-size: 1.8rem; font-weight: 700; color: var(--secondary); /* Text is Gold */ text-transform: uppercase; line-height: 1.4; letter-spacing: 2px; font-style: italic; }
 .mascot-display { text-align: center; margin-top: 2rem; }
 .mascot-icon { font-size: 4rem; margin-bottom: 10px; display: block; }
 
 /* --- PORTAL & ADMIN CONTAINERS --- */
-.portal-container { max-width: 900px; margin: 0 auto; background: var(--bg-panel); padding: 2.5rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.portal-container { max-width: 900px; margin: 0 auto; background: var(--bg-panel); padding: 2.5rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
 
 .dashboard-view { display: none; animation: fadeIn 0.5s; }
 .dashboard-view.active { display: block; }
@@ -158,8 +176,8 @@ tr:hover { background-color: rgba(255,255,255,0.03); }
     flex: 1; padding: 15px; background: transparent; border: none; color: #888; cursor: pointer;
     font-weight: bold; text-transform: uppercase; font-size: 0.9rem; border-bottom: 3px solid transparent; min-width: 100px;
 }
-.admin-tab-btn:hover { color: white; }
-.admin-tab-btn.active { color: var(--secondary); border-bottom-color: var(--secondary); background: rgba(183,28,28,0.05); }
+.admin-tab-btn:hover { color: var(--secondary); } /* Hover is Gold */
+.admin-tab-btn.active { color: var(--secondary); border-bottom-color: var(--secondary); background: rgba(255, 215, 0, 0.1); }
 
 /* --- NEWS FEED --- */
 .news-card { background: #151515; border: 1px solid #333; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
@@ -170,7 +188,7 @@ tr:hover { background-color: rgba(255,255,255,0.03); }
 .news-body { padding: 15px; color: #ccc; font-size: 0.95rem; }
 .news-comments { padding: 15px; background: #111; border-top: 1px solid #333; }
 .comment-item { padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.85rem; }
-.comment-user { color: var(--secondary); font-weight: bold; font-size: 0.8rem; }
+.comment-user { color: var(--secondary); /* Comment User Name Gold */ font-weight: bold; font-size: 0.8rem; }
 .comment-text { color: #bbb; margin-left: 5px; }
 
 .add-comment-box { display: flex; gap: 10px; margin-top: 10px; }
@@ -183,13 +201,14 @@ tr:hover { background-color: rgba(255,255,255,0.03); }
 
 .toast {
     position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 12px 25px;
-    border-radius: 4px; border-left: 5px solid var(--secondary); box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    border-radius: 4px; border-left: 5px solid var(--secondary); /* Toast Border is Gold */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     transform: translateY(100px); opacity: 0; transition: all 0.4s ease; z-index: 2000;
 }
 .toast.show { transform: translateY(0); opacity: 1; }
 
 /* --- FOOTER --- */
-footer { text-align: center; padding: 2rem; border-top: 1px solid #333; font-size: 0.9rem; color: #666; }
+footer { text-align: center; padding: 2rem; border-top: 1px solid #333; font-size: 0.9rem; color: #666; background: #000; }
 
 /* --- UTILITY CLASSES --- */
 .d-none { display: none !important; }
@@ -358,7 +377,7 @@ footer { text-align: center; padding: 2rem; border-top: 1px solid #333; font-siz
 <section id="houses">
     <h2 class="section-title">The House System</h2>
     <div class="houses-grid">
-        <div class="house-card house-red">
+        <div class="house-card house-red"> <!-- Class 'house-red' now triggers Gold background via CSS -->
             <div class="house-header">Red House</div>
             <div class="house-body">Colonial Name: Wellington<br>Type: Day Scholar</div>
         </div>
@@ -404,10 +423,11 @@ footer { text-align: center; padding: 2rem; border-top: 1px solid #333; font-siz
         <h3 style="color: white; margin-bottom: 10px;">School Colours</h3>
         <div class="d-flex" style="justify-content: center; gap: 20px;">
             <div style="width: 50px; height: 50px; background: black; border: 1px solid #333;"></div>
-            <div style="width: 50px; height: 50px; background: #D32F2F;"></div>
+            <!-- Updated Dot: Red -> Gold -->
+            <div style="width: 50px; height: 50px; background: var(--gold); border: 1px solid #b8860b;"></div>
             <div style="width: 50px; height: 50px; background: white; border: 1px solid #333;"></div>
         </div>
-        <p style="margin-top: 10px; color: var(--text-dim);">Black • Red • White</p>
+        <p style="margin-top: 10px; color: var(--text-dim);">Black • Gold • White</p>
     </div>
 </section>
 
@@ -789,13 +809,14 @@ let currentStudentId = null;
 let tempLoginId = null;
 
 // ==========================================
-// 2. BACKGROUND ANIMATION
+// 2. BACKGROUND ANIMATION (NOW GOLD PARTICLES)
 // ==========================================
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
 const particleCount = 60;
-const color = '183, 28, 28'; // Red
+/* Updated Color: Red -> Gold */
+const color = '255, 215, 0'; 
 
 class Particle {
     constructor() { this.reset(); }
@@ -839,7 +860,8 @@ function animate() {
             let dy = particles[a].y - particles[b].y;
             let distance = Math.sqrt(dx * dx + dy * dy);
             if (distance < 100) {
-                ctx.strokeStyle = `rgba(${color}, ${1 - distance / 100})`;
+                /* Updated Line Color: Red -> Gold */
+                ctx.strokeStyle = `rgba(${color}, ${1 - distance / 100})`; 
                 ctx.lineWidth = 0.5;
                 ctx.beginPath();
                 ctx.moveTo(particles[a].x, particles[a].y);
